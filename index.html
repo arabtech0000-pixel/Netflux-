@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" class="dark bg-black text-white" style="background-color:#000000;color:#ffffff">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Netflix Mobile</title>
+    <meta name="description" content="High-fidelity Netflix mobile streaming application clone with cinematic browse, video player, profiles, downloads, and search." />
+    <meta property="og:title" content="Netflix Mobile" />
+    <meta property="og:description" content="High-fidelity Netflix mobile streaming application clone with cinematic browse, video player, profiles, downloads, and search." />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Netflux" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+      (function () {
+        var recover = function () {
+          try {
+            if (sessionStorage.getItem('netflux_chunk_recover') === '1') return;
+            sessionStorage.setItem('netflux_chunk_recover', '1');
+            var cleanSw = ('serviceWorker' in navigator)
+              ? navigator.serviceWorker.getRegistrations().then(function (regs) {
+                  return Promise.all(regs.map(function (r) { return r.unregister(); }));
+                })
+              : Promise.resolve();
+            var cleanCaches = ('caches' in window)
+              ? caches.keys().then(function (keys) {
+                  return Promise.all(keys.map(function (k) { return caches.delete(k); }));
+                })
+              : Promise.resolve();
+            Promise.all([cleanSw, cleanCaches]).finally(function () {
+              window.location.reload();
+            });
+          } catch (e) {}
+        };
+        window.addEventListener('vite:preloadError', function (ev) {
+          if (ev && ev.preventDefault) ev.preventDefault();
+          recover();
+        });
+        window.addEventListener('error', function (ev) {
+          var target = ev && ev.target;
+          if (target && (target.tagName === 'SCRIPT' || target.tagName === 'LINK')) {
+            var src = target.src || target.href || '';
+            if (src.indexOf('/assets/') !== -1) {
+              recover();
+            }
+          }
+        }, true);
+      })();
+    </script>
+  </head>
+  <body class="bg-black text-white antialiased selection:bg-[#E50914] selection:text-white" style="background-color:#000000;color:#ffffff">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

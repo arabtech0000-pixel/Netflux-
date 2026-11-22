@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Netflux" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/netflux_black</item>
+        <item name="android:statusBarColor">@color/netflux_black</item>
+        <item name="android:navigationBarColor">@color/netflux_black</item>
+        <item name="android:colorBackground">@color/netflux_black</item>
+    </style>
+</resources>

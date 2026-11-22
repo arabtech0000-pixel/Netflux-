@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netflux Offline</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #000000;
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        text-align: center;
+      }
+      .card {
+        max-width: 360px;
+        width: 100%;
+        padding: 28px 22px;
+        border-radius: 16px;
+        background: #0d0d0d;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .brand {
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        color: #e50914;
+        margin-bottom: 12px;
+      }
+      h1 {
+        font-size: 18px;
+        margin: 0 0 8px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #a3a3a3;
+        margin: 0 0 20px;
+      }
+      button {
+        width: 100%;
+        border: 0;
+        border-radius: 10px;
+        padding: 12px 18px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #ffffff;
+        background: #e50914;
+        cursor: pointer;
+      }
+      button:active {
+        opacity: 0.88;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="brand">NETFLUX</div>
+      <h1>Connection Unavailable</h1>
+      <p>Please check your mobile data or Wi-Fi connection, then try loading Netflux again.</p>
+      <button type="button" onclick="window.NetfluxBridge && window.NetfluxBridge.retry()">
+        Try Again
+      </button>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "Netflix Mobile",
+  "description": "High-fidelity Netflix mobile streaming application clone with cinematic browse, video player, profiles, downloads, and search.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
