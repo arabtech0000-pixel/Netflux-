@@ -33,13 +33,13 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: TypeScript typecheck
         run: npm run lint
 
       - name: Run logic unit tests
-        run: npx --yes tsx --test src/services/logic.test.ts
+        run: ./node_modules/.bin/tsx --test src/services/logic.test.ts
 
       - name: Build production web bundle
         run: npm run build
@@ -55,8 +55,8 @@ jobs:
             fi
             sleep 0.5
           done
-          curl -sf http://127.0.0.1:3999/ > /dev/null
-          curl -sf http://127.0.0.1:3999/api/tmdb/health > /dev/null
+          curl -sf http://127.0.0.1:3999/ > /dev/null || { cat /tmp/ci-server.log; exit 1; }
+          curl -sf http://127.0.0.1:3999/api/tmdb/health > /dev/null || { cat /tmp/ci-server.log; exit 1; }
 
   build-apk:
     name: Build Installable Android APK
