@@ -505,7 +505,7 @@ class NetfluxLocalApi(private val context: Context) {
             "Content-Length, Content-Range, Accept-Ranges, Content-Type, Content-Disposition"
         respHeaders["Accept-Ranges"] = conn.getHeaderField("Accept-Ranges") ?: "bytes"
 
-        val contentType = conn.contentType?.substringBefore(';')?.trim()?.ifBlank { null } ?: "video/mp4"
+        val contentType = conn.contentType?.substringBefore(';')?.trim()?.takeIf { it.isNotBlank() } ?: "video/mp4"
         respHeaders["Content-Type"] = contentType
         conn.getHeaderField("Content-Length")?.takeIf { it.isNotBlank() }?.let {
             respHeaders["Content-Length"] = it
@@ -1088,7 +1088,8 @@ class NetfluxLocalApi(private val context: Context) {
     private fun buildDetailsResponse(uri: Uri): JSONObject {
         val requestedId = uri.getQueryParameter("id") ?: ""
         val title = (uri.getQueryParameter("title") ?: "").trim()
-        val reqType = if (uri.getQueryParameter("type") in listOf("series", "tv")) "series" else "movie"
+        val qType = uri.getQueryParameter("type")
+        val reqType = if (qType == "series" || qType == "tv") "series" else "movie"
         val queryMunoId = uri.getQueryParameter("munoId") ?: ""
         val querySeriesCode = uri.getQueryParameter("seriesCode") ?: ""
         val queryVideoUrl = sanitizeStreamUrl(uri.getQueryParameter("videoUrl"))
@@ -1239,7 +1240,7 @@ class NetfluxLocalApi(private val context: Context) {
         } else {
             match?.optJSONArray("episodes")?.let { existing ->
                 for (i in 0 until existing.length()) {
-                    epArr.put(existing.optJSONObject(i))
+                    existing.optJSONObject(i)?.let { epArr.put(it) }
                 }
             }
         }

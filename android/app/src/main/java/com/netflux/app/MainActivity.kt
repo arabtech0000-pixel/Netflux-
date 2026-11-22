@@ -209,8 +209,7 @@ class MainActivity : AppCompatActivity() {
                 if (
                     request?.isForMainFrame == true &&
                     uri?.scheme != "file" &&
-                    !uri?.host.equals(LOCAL_HOST, true) &&
-                    error?.errorCode != ERROR_ABORTED
+                    !uri?.host.equals(LOCAL_HOST, true)
                 ) {
                     view?.loadUrl("file:///android_asset/offline.html")
                 }
@@ -248,7 +247,7 @@ class MainActivity : AppCompatActivity() {
 
         webView.setDownloadListener { url, userAgent, contentDisposition, mimeType, _ ->
             try {
-                if (url.startsWith("blob:", ignoreCase = true)) {
+                if (url.isNullOrBlank() || url.startsWith("blob:", ignoreCase = true)) {
                     return@setDownloadListener
                 }
                 val parsedUri = Uri.parse(url)
