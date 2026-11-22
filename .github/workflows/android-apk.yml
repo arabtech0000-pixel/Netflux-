@@ -17,7 +17,7 @@ on:
         default: 'https://ais-pre-euj3wxuef7xp3b57twk4en-706784507558.europe-west2.run.app'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify-web:
@@ -181,3 +181,33 @@ jobs:
           path: apk-output/Netflux.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish direct APK download to GitHub Releases
+        id: publish_release
+        if: github.event_name != 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="latest"
+          TITLE="Netflux Android APK (Latest)"
+          NOTES="Direct Android APK download for Netflux (Build #${{ github.run_number }}). Tap **Netflux.apk** under Assets below to download and install directly on Android."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --title "$TITLE" --notes "$NOTES"
+            gh release upload "$TAG" apk-output/Netflux.apk --clobber
+          else
+            gh release create "$TAG" apk-output/Netflux.apk \
+              --target "${{ github.sha }}" \
+              --title "$TITLE" \
+              --notes "$NOTES"
+          fi
+
+      - name: Add mobile-friendly APK download summary
+        run: |
+          {
+            echo "## Netflux Android APK Ready"
+            echo ""
+            echo "- **Direct APK Download (1-tap on Android, no ZIP):** https://github.com/${{ github.repository }}/releases/download/latest/Netflux.apk"
+            echo "- **Releases Page:** https://github.com/${{ github.repository }}/releases/tag/latest"
+            echo "- **Actions Artifact (ZIP):** Scroll the **Artifacts** row right past the copy-SHA256 button (or switch browser to **Desktop site**) to reveal the Download button for \`Netflux-Android-APK\`."
+          } >> "$GITHUB_STEP_SUMMARY"
